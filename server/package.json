@@ -1,0 +1,36 @@
+{
+  "name": "workspot-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API коворкинга WorkSpot: Node.js + Express + MongoDB + Redis",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "dev:memory": "node scripts/dev-memory.js",
+    "start": "node src/index.js",
+    "seed": "node src/seed/seed.js",
+    "test": "NODE_ENV=test node --test --test-concurrency=1 test/",
+    "check": "node --check src/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "ioredis": "^5.11.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.1",
+    "morgan": "^1.12.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "ioredis-mock": "^8.13.1",
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.1.4"
+  }
+}
