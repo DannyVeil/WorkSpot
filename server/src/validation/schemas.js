@@ -79,3 +79,11 @@ export const notificationParamsSchema = z.object({
 export const spaceSlugParamsSchema = z.object({
   slug: z.string().trim().min(1).max(60),
 });
+
+export const supportMessageSchema = z.object({
+  text: z
+    .string()
+    .trim()
+    .min(1, 'Введите сообщение')
+    .max(2000, 'Сообщение слишком длинное — до 2000 символов'),
+});

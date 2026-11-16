@@ -13,6 +13,9 @@ export default function AccountPage({
   onCancelBooking,
   chatMessages,
   chatTyping,
+  chatError,
+  chatCanSend,
+  chatRetryInSeconds,
   onSendMessage,
   onNavigate,
   onLogout,
@@ -88,6 +91,9 @@ export default function AccountPage({
           <SupportChat
             messages={chatMessages}
             typing={chatTyping}
+            error={chatError}
+            canSend={chatCanSend}
+            retryInSeconds={chatRetryInSeconds}
             onSendMessage={onSendMessage}
             focusSignal={focusChatSignal}
           />

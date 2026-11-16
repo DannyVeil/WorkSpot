@@ -5,6 +5,7 @@ import { connectMongo, disconnectMongo } from './config/db.js';
 import { closeRedis, initRedis } from './config/redis.js';
 import { ensureIndexes } from './models/index.js';
 import { log } from './utils/logger.js';
+import { startTelegramPoller, stopTelegramPoller } from './services/telegram.poller.js';
 
 async function main() {
   initRedis();
@@ -18,12 +19,17 @@ async function main() {
     log.info(`WorkSpot API запущен: http://localhost:${env.port} (${env.nodeEnv})`);
   });
 
+  // Бот техподдержки: long polling, публичный URL не нужен.
+  await startTelegramPoller();
+
   let shuttingDown = false;
 
   const shutdown = async (signal) => {
     if (shuttingDown) return;
     shuttingDown = true;
     log.info(`Получен ${signal}: останавливаем сервер…`);
+
+    stopTelegramPoller();
 
     const forceExit = setTimeout(() => {
       log.error('Не удалось корректно завершить работу за 10 секунд');

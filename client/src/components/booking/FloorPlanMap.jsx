@@ -1,4 +1,4 @@
-import { ArrowRight, VolumeX } from 'lucide-react';
+import { ArrowRight, Users, VolumeX } from 'lucide-react';
 import { formatPrice } from '../../utils/format.js';
 
 /** Интерактивная карта коворкинга из дизайн-макета. */
@@ -110,7 +110,7 @@ export default function FloorPlanMap({
 
       {/* Контейнер архитектурного плана */}
       <div className="w-full overflow-x-auto rounded-2xl border-2 border-slate-300/90 bg-[#E8F3FF] p-3 sm:p-5 custom-scrollbar">
-        <div className="min-w-[740px] h-[490px] relative bg-[#F5FAFF] border-[3px] border-[#0F2942]/80 rounded-xl shadow-inner select-none">
+        <div className="min-w-[860px] h-[600px] relative bg-[#F5FAFF] border-[3px] border-[#0F2942]/80 rounded-xl shadow-inner select-none">
           {/* Левая сервисная полоса (лаунж-кресла и вход) */}
           <div className="absolute left-0 top-0 bottom-0 w-14 border-r border-slate-300/80 bg-slate-100/70 flex flex-col items-center justify-between py-4">
             <div className="w-7 h-7 rounded-full border border-slate-400 flex items-center justify-center text-[10px] font-bold text-slate-600">
@@ -140,9 +140,9 @@ export default function FloorPlanMap({
             <div className="grid grid-cols-3 gap-5 pt-1">
               <div>
                 <ChairRow count={2} position="top" />
-                <div className="h-14 rounded-md bg-slate-200/90 border border-slate-300 grid grid-cols-2 divide-x divide-slate-300">
-                  <div />
-                  <div />
+                <div className="h-14 rounded-md bg-slate-200/90 border border-slate-300 grid grid-cols-2 divide-x divide-slate-300 p-0.5 gap-0.5">
+                  {renderInteractiveSeat('desk-16', 'h-full text-[11px]')}
+                  {renderInteractiveSeat('desk-17', 'h-full text-[11px]')}
                 </div>
                 <ChairRow count={2} position="bottom" />
               </div>
@@ -151,16 +151,16 @@ export default function FloorPlanMap({
                 <ChairRow count={2} position="top" />
                 <div className="h-14 rounded-md bg-slate-200/90 border border-slate-300 grid grid-cols-2 divide-x divide-slate-300 p-0.5 gap-0.5">
                   {renderInteractiveSeat('desk-18', 'h-full text-xs')}
-                  <div className="bg-slate-200 rounded-xs" />
+                  {renderInteractiveSeat('desk-19', 'h-full text-[11px]')}
                 </div>
                 <ChairRow count={2} position="bottom" />
               </div>
 
               <div>
                 <ChairRow count={2} position="top" />
-                <div className="h-14 rounded-md bg-slate-200/90 border border-slate-300 grid grid-cols-2 divide-x divide-slate-300">
-                  <div />
-                  <div />
+                <div className="h-14 rounded-md bg-slate-200/90 border border-slate-300 grid grid-cols-2 divide-x divide-slate-300 p-0.5 gap-0.5">
+                  {renderInteractiveSeat('desk-20', 'h-full text-[11px]')}
+                  {renderInteractiveSeat('desk-21', 'h-full text-[11px]')}
                 </div>
                 <ChairRow count={2} position="bottom" />
               </div>
@@ -208,13 +208,28 @@ export default function FloorPlanMap({
               </div>
             </div>
 
-            {/* Нижний блок: Зона тишины (9, 10, 12, 13) */}
+            {/* Командный кластер: Стол №2, Стол №3, Стол №4 */}
+            <div className="mt-2 bg-white/95 border-2 border-[#0F2942]/80 rounded-xl p-3 shadow-2xs">
+              <div className="grid grid-cols-3 gap-2">
+                {renderInteractiveSeat('desk-2', 'h-11 text-xs')}
+                {renderInteractiveSeat('desk-3', 'h-11 text-xs')}
+                {renderInteractiveSeat('desk-4', 'h-11 text-xs')}
+              </div>
+              <div className="text-center mt-2 text-xs font-bold text-[#0F2942] flex items-center justify-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-[#19B5FE]" />
+                Командный кластер
+              </div>
+            </div>
+
+            {/* Нижний блок: Зона тишины (9, 10, 11, 12, 13, 14) */}
             <div className="mt-2 ml-auto w-[285px] bg-white/95 border-2 border-[#0F2942]/80 rounded-xl p-3 shadow-2xs">
-              <div className="grid grid-cols-4 gap-2">
-                {renderInteractiveSeat('quiet-12', 'h-11 text-xs')}
+              <div className="grid grid-cols-3 gap-2">
                 {renderInteractiveSeat('quiet-9', 'h-11 text-xs')}
                 {renderInteractiveSeat('quiet-10', 'h-11 text-xs')}
+                {renderInteractiveSeat('quiet-11', 'h-11 text-xs')}
+                {renderInteractiveSeat('quiet-12', 'h-11 text-xs')}
                 {renderInteractiveSeat('quiet-13', 'h-11 text-xs')}
+                {renderInteractiveSeat('quiet-14', 'h-11 text-xs')}
               </div>
               <div className="text-center mt-2 text-xs font-bold text-[#0F2942] flex items-center justify-center gap-1.5">
                 <VolumeX className="w-3.5 h-3.5 text-[#19B5FE]" />
@@ -223,7 +238,7 @@ export default function FloorPlanMap({
             </div>
           </div>
 
-          {/* ПРАВОЕ КРЫЛО: СТОЛ №1, ПЕРЕГОВОРНАЯ №1 И КАБИНЕТ №2 */}
+          {/* ПРАВОЕ КРЫЛО: СТОЛ №1, ПЕРЕГОВОРНЫЕ И КАБИНЕТЫ */}
           <div className="absolute right-0 top-0 bottom-0 w-[230px] border-l-[3px] border-[#0F2942]/80 flex flex-col divide-y-[3px] divide-[#0F2942]/80 bg-white/70">
             <div className="flex-1 p-3 flex flex-col justify-center">
               <ChairRow count={3} position="top" />
@@ -238,8 +253,20 @@ export default function FloorPlanMap({
             </div>
 
             <div className="flex-1 p-3 flex flex-col justify-center">
+              <ChairRow count={3} position="top" />
+              {renderInteractiveSeat('meeting-2', 'h-14 w-full text-xs')}
+              <ChairRow count={3} position="bottom" />
+            </div>
+
+            <div className="flex-1 p-3 flex flex-col justify-center">
               <ChairRow count={2} position="top" />
               {renderInteractiveSeat('office-2', 'h-14 w-full text-xs')}
+              <ChairRow count={2} position="bottom" />
+            </div>
+
+            <div className="flex-1 p-3 flex flex-col justify-center">
+              <ChairRow count={2} position="top" />
+              {renderInteractiveSeat('office-3', 'h-14 w-full text-xs')}
               <ChairRow count={2} position="bottom" />
             </div>
           </div>

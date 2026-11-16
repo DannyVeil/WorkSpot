@@ -246,6 +246,20 @@ export function createWorkSpotApi({ baseUrl = API_BASE_URL, storage } = {}) {
     markNotificationRead(id) {
       return authorized(`/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
     },
+
+    /** Чат поддержки: переписка текущего пользователя (ответы приходят из Telegram). */
+    getSupportMessages() {
+      return authorized('/support/messages');
+    },
+
+    sendSupportMessage(text) {
+      return authorized('/support/messages', { method: 'POST', body: { text } });
+    },
+
+    /** Персональный QR-пропуск: подписанный ключ с ограниченным сроком действия. */
+    getPass() {
+      return authorized('/pass');
+    },
   };
 }
 

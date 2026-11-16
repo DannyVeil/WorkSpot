@@ -377,6 +377,9 @@ export default function App() {
             onCancelBooking={handleCancelBookingById}
             chatMessages={chat.messages}
             chatTyping={chat.typing}
+            chatError={chat.error}
+            chatCanSend={chat.canSend}
+            chatRetryInSeconds={chat.retryInSeconds}
             onSendMessage={chat.sendMessage}
             onNavigate={navigateTo}
             onLogout={handleLogout}

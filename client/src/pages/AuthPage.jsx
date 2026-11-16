@@ -12,7 +12,6 @@ import {
   UserPlus,
 } from 'lucide-react';
 import WorkSpotLogo from '../components/brand/WorkSpotLogo.jsx';
-import { DEMO_CREDENTIALS } from '../constants/config.js';
 import { describeApiError, getFieldErrors } from '../utils/errors.js';
 
 /** Страница регистрации и входа. Работает с реальным API. */
@@ -116,18 +115,6 @@ export default function AuthPage({
     await submit({ payload });
   };
 
-  const handleDemoLogin = async () => {
-    setMode('login');
-    setErrors({});
-    await submit({
-      nextMode: 'login',
-      payload: {
-        email: DEMO_CREDENTIALS.email,
-        password: DEMO_CREDENTIALS.password,
-      },
-    });
-  };
-
   const switchMode = (nextMode) => {
     setMode(nextMode);
     setErrors({});
@@ -188,7 +175,7 @@ export default function AuthPage({
           <p className="text-xs sm:text-sm text-slate-500 mt-1.5">
             {mode === 'register'
               ? 'Заполните данные, чтобы получить персональный QR-пропуск и оформлять брони'
-              : 'Введите данные учётной записи или воспользуйтесь быстрым демо-входом'}
+              : 'Введите email и пароль от вашей учётной записи WorkSpot'}
           </p>
         </div>
 
@@ -228,7 +215,7 @@ export default function AuthPage({
                 autoComplete="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="demo@workspot.kz"
+                placeholder="name@company.kz"
                 className={inputClass('email')}
               />
             </div>
@@ -338,19 +325,6 @@ export default function AuthPage({
             {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
             {mode === 'register' ? 'Зарегистрироваться и продолжить' : 'Войти в аккаунт'}
           </button>
-
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            disabled={submitting}
-            className="w-full py-2.5 px-4 rounded-xl bg-[#F2F7FC] hover:bg-[#E8F3FF] text-[#0F2942] font-semibold text-xs border border-sky-200/80 transition-colors cursor-pointer disabled:opacity-60"
-          >
-            Быстрый демо-вход (demo@workspot.kz)
-          </button>
-
-          <p className="text-center text-[11px] text-slate-400">
-            Демо-аккаунт: {DEMO_CREDENTIALS.email} · пароль {DEMO_CREDENTIALS.password}
-          </p>
         </form>
       </div>
     </div>

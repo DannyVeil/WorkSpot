@@ -31,6 +31,11 @@ export const env = {
   jwtAccessTtl: process.env.JWT_ACCESS_TTL || '2h',
   refreshTtlDays: toInt(process.env.REFRESH_TTL_DAYS, 30),
 
+  // Персональный QR-пропуск: HMAC-ключ от id пользователя и срока действия.
+  // Отдельный секрет позволяет перевыпустить пропуска, не ломая JWT-сессии.
+  passQrSecret: process.env.PASS_QR_SECRET || `${jwtSecret}:pass`,
+  passQrTtlSeconds: toInt(process.env.PASS_QR_TTL_SECONDS, 300),
+
   corsOrigins: toList(process.env.CORS_ORIGINS),
   trustProxy: toInt(process.env.TRUST_PROXY, 1),
 
@@ -43,4 +48,13 @@ export const env = {
   maxBookingHours: toInt(process.env.MAX_BOOKING_HOURS, 12),
   bookingHorizonDays: toInt(process.env.BOOKING_HORIZON_DAYS, 60),
   businessTimezone: process.env.BUSINESS_TIMEZONE || 'Asia/Almaty',
+
+  // Чат поддержки через Telegram: сообщения сайта уходят оператору,
+  // его Reply возвращается пользователю на сайт (long polling).
+  telegram: {
+    botToken: process.env.TELEGRAM_BOT_TOKEN || '',
+    adminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID || '',
+    polling: process.env.TELEGRAM_POLLING !== '0',
+    pollTimeoutSeconds: toInt(process.env.TELEGRAM_POLL_TIMEOUT, 20),
+  },
 };

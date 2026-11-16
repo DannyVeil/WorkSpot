@@ -7,6 +7,8 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    // Доступ через туннель ngrok: разрешаем внешние домены ngrok в Host-заголовке.
+    allowedHosts: ['.ngrok-free.app', '.ngrok-free.dev', '.ngrok.app', '.ngrok.dev', '.ngrok.io'],
     // Прокси избавляет от CORS в разработке: фронтенд ходит на /api,
     // Vite перенаправляет запросы в Express-сервер.
     proxy: {

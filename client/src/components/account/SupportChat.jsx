@@ -1,12 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
-import { MessageSquare, Send } from 'lucide-react';
-import { QUICK_QUESTIONS } from '../../data/chat.js';
+import { Clock, MessageSquare, Send } from 'lucide-react';
+import { QUICK_QUESTIONS, SUPPORT_WELCOME } from '../../data/chat.js';
 
-/** Чат техподдержки 24/7 (демо-автоответ). */
-export default function SupportChat({ messages, typing, onSendMessage, focusSignal = 0 }) {
+/** mm:ss для таймера ожидания ответа. */
+function formatRetry(seconds) {
+  const total = Math.max(0, seconds);
+  const minutes = Math.floor(total / 60);
+  const rest = total % 60;
+  return `${minutes}:${String(rest).padStart(2, '0')}`;
+}
+
+/** Чат техподдержки: сообщения уходят оператору в Telegram, ответы приходят сюда. */
+export default function SupportChat({
+  messages,
+  typing,
+  error,
+  canSend = true,
+  retryInSeconds = 0,
+  onSendMessage,
+  focusSignal = 0,
+}) {
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef(null);
   const chatInputRef = useRef(null);
+
+  const visibleMessages = messages.length ? messages : [SUPPORT_WELCOME];
 
   useEffect(() => {
     if (focusSignal > 0) {
@@ -20,6 +38,7 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!canSend) return;
     const value = chatInput.trim();
     if (!value) return;
     onSendMessage(value);
@@ -47,7 +66,7 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
       </div>
 
       <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-[#F2F7FC] custom-scrollbar">
-        {messages.map((message) => {
+        {visibleMessages.map((message) => {
           const isUser = message.sender === 'user';
 
           return (
@@ -57,7 +76,7 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
             >
               {!isUser && (
                 <span className="text-[11px] font-semibold text-slate-500 mb-1 ml-1">
-                  {message.author}
+                  {message.author || 'Поддержка WorkSpot'}
                 </span>
               )}
               <div
@@ -65,11 +84,13 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
                   isUser
                     ? 'bg-[#19B5FE] text-white rounded-br-xs'
                     : 'bg-white text-[#0F2942] border border-sky-100 rounded-bl-xs'
-                }`}
+                } ${message.failed ? 'opacity-60' : ''}`}
               >
                 {message.text}
               </div>
-              <span className="text-[10px] text-slate-400 mt-1 px-1">{message.time}</span>
+              <span className="text-[10px] text-slate-400 mt-1 px-1">
+                {message.failed ? 'Не отправлено' : message.pending ? 'Отправляется…' : message.time}
+              </span>
             </div>
           );
         })}
@@ -77,7 +98,7 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
         {typing && (
           <div className="flex flex-col items-start">
             <span className="text-[11px] font-semibold text-slate-500 mb-1 ml-1">
-              Елена • Поддержка WorkSpot
+              Поддержка WorkSpot
             </span>
             <div className="bg-white border border-sky-100 rounded-2xl rounded-bl-xs px-4 py-3 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.3s]" />
@@ -95,13 +116,29 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
           <button
             key={question}
             type="button"
+            disabled={!canSend}
             onClick={() => onSendMessage(question)}
-            className="shrink-0 text-xs font-semibold text-[#19B5FE] bg-[#F2F7FC] hover:bg-[#E8F3FF] border border-sky-200/70 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+            className="shrink-0 text-xs font-semibold text-[#19B5FE] bg-[#F2F7FC] hover:bg-[#E8F3FF] border border-sky-200/70 px-3 py-1.5 rounded-full transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {question}
           </button>
         ))}
       </div>
+
+      {!canSend && (
+        <div className="px-4 py-2 bg-amber-50 border-t border-amber-100 text-[11px] font-semibold text-amber-800 flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 shrink-0" />
+          <span>
+            Ответ оператора уже в пути. Написать ещё раз можно через {formatRetry(retryInSeconds)}
+          </span>
+        </div>
+      )}
+
+      {error && (
+        <div className="px-4 py-2 bg-red-50 border-t border-red-100 text-[11px] font-semibold text-red-700">
+          {error}
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -111,14 +148,16 @@ export default function SupportChat({ messages, typing, onSendMessage, focusSign
           ref={chatInputRef}
           type="text"
           value={chatInput}
+          disabled={!canSend}
           onChange={(e) => setChatInput(e.target.value)}
-          placeholder="Напишите ваш вопрос..."
-          className="flex-1 px-4 py-2.5 rounded-xl bg-[#F2F7FC] border border-sky-100 text-sm text-[#0F2942] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#19B5FE] focus:bg-white"
+          placeholder={canSend ? 'Напишите ваш вопрос...' : 'Дождитесь ответа поддержки'}
+          className="flex-1 px-4 py-2.5 rounded-xl bg-[#F2F7FC] border border-sky-100 text-sm text-[#0F2942] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#19B5FE] focus:bg-white disabled:opacity-60 disabled:cursor-not-allowed"
         />
         <button
           type="submit"
+          disabled={!canSend}
           aria-label="Отправить сообщение"
-          className="p-2.5 rounded-xl bg-[#19B5FE] hover:bg-[#0099E5] text-white shadow-xs transition-colors cursor-pointer shrink-0"
+          className="p-2.5 rounded-xl bg-[#19B5FE] hover:bg-[#0099E5] text-white shadow-xs transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Send className="w-5 h-5" />
         </button>

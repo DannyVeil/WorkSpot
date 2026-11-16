@@ -37,3 +37,13 @@ export const apiLimiter = rateLimit({
   skip: skipInTests,
   handler: jsonRateLimitHandler('Слишком много запросов. Попробуйте позже.'),
 });
+
+/** Чат поддержки: сообщения уходят оператору в Telegram, спамить нельзя */
+export const supportLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 20,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  skip: skipInTests,
+  handler: jsonRateLimitHandler('Слишком много сообщений в поддержку. Подождите минуту.'),
+});

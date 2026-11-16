@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LogOut, QrCode } from 'lucide-react';
+import PassQr from './PassQr.jsx';
 
 /** Карточка профиля: аватар, роль, QR-пропуск, мини-статистика. */
 export default function ProfileCard({ user, activeBookingsCount, totalHours, onLogout }) {
@@ -45,23 +46,7 @@ export default function ProfileCard({ user, activeBookingsCount, totalHours, onL
         </div>
       </div>
 
-      {showQrModal && (
-        <div className="my-5 p-4 rounded-2xl bg-[#F2F7FC] border border-sky-200/80 flex flex-col sm:flex-row items-center gap-4">
-          <div className="w-24 h-24 bg-white p-2 rounded-xl border border-sky-100 flex items-center justify-center shrink-0">
-            <QrCode className="w-16 h-16 text-[#0F2942]" />
-          </div>
-          <div className="text-center sm:text-left">
-            <div className="text-sm font-extrabold text-[#0F2942]">Персональный пропуск 24/7</div>
-            <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-              Поднесите этот QR-код к считывателю на входе в коворкинг или у двери переговорной.
-              Код обновляется автоматически.
-            </p>
-            <span className="inline-block mt-2 text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-              Статус: Активен
-            </span>
-          </div>
-        </div>
-      )}
+      {showQrModal && <PassQr active={showQrModal} />}
 
       <div className="grid grid-cols-3 gap-3 pt-5">
         <div className="bg-[#F2F7FC] rounded-2xl p-3.5 border border-sky-100">
